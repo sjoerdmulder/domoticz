@@ -12,24 +12,26 @@ require.config({
         'angularAMD': '../js/angularAMD.min',
         'angular-tree-control': '../js/angular-tree-control',
         'ngDraggable': '../js/ngDraggable',
-		'ui.bootstrap': '../js/ui-bootstrap.min',
-		'angular.directives-round-progress': '../js/angular-round-progress-directive',
-		'angular.scrollglue': '../js/angular-scrollglue'
+        'ui.bootstrap': '../js/ui-bootstrap.min',
+        'angular.directives-round-progress': '../js/angular-round-progress-directive',
+        'angular.scrollglue': '../js/angular-scrollglue',
+        'datatables': '../js/angular-datatables.min'
     },
-    shim: { 
-		'angularAMD': ['angular'], 
-		'angular-route': ['angular'],
-		'angular-animate': ['angular'],
-		'ngSanitize': ['angular'],
-		'angular-md5': ['angular'],
-		'ng-grid': ['angular'],
-		'ng-grid-flexible-height': ['angular'],
-		'highcharts-ng': ['angular'],
-		'angular-tree-control': ['angular'],
+    shim: {
+        'angularAMD': ['angular'],
+        'angular-route': ['angular'],
+        'angular-animate': ['angular'],
+        'ngSanitize': ['angular'],
+        'angular-md5': ['angular'],
+        'ng-grid': ['angular'],
+        'ng-grid-flexible-height': ['angular'],
+        'highcharts-ng': ['angular'],
+        'angular-tree-control': ['angular'],
         'ui.bootstrap': ['angular'],
-		'ngDraggable': ['angular'],
-		'angular.directives-round-progress' : ['angular'],
-		'angular.scrollglue' : ['angular'],
-	},
+        'ngDraggable': ['angular'],
+        'angular.directives-round-progress' : ['angular'],
+        'angular.scrollglue' : ['angular'],
+        'datatables' : ['angular']
+    },
     deps: ['app']
 });

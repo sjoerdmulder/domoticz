@@ -1,5 +1,5 @@
-define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-flexible-height', 'highcharts-ng', 'angular-tree-control','ngDraggable','ngSanitize','angular-md5','ui.bootstrap','angular.directives-round-progress','angular.scrollglue'], function (angularAMD) {
-	var app = angular.module('domoticz', ['ngRoute','ngAnimate','ngGrid','highcharts-ng', 'treeControl','ngDraggable','ngSanitize','angular-md5','ui.bootstrap','angular.directives-round-progress','angular.directives-round-progress','angular.scrollglue']);
+define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-flexible-height', 'highcharts-ng', 'angular-tree-control','ngDraggable','ngSanitize','angular-md5','ui.bootstrap','angular.directives-round-progress','angular.scrollglue', 'datatables'], function (angularAMD) {
+	var app = angular.module('domoticz', ['ngRoute','ngAnimate','ngGrid','highcharts-ng', 'treeControl','ngDraggable','ngSanitize','angular-md5','ui.bootstrap','angular.directives-round-progress','angular.directives-round-progress','angular.scrollglue','datatables']);
 
 		isOnline=false;
 		dashboardType=1;
@@ -12,7 +12,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			window.my_config =
 			{
 				userrights : permissionList.rights
-			}; 			
+			};
 			$rootScope.$broadcast('permissionsChanged');
 		  },
 		  hasPermission: function (permission) {
@@ -44,7 +44,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 		  if(notPermissionFlag) {
 			value = value.slice(1).trim();
 		  }
-	 
+
 		  function toggleVisibilityBasedOnPermission() {
 			var hasPermission = permissions.hasPermission(value);
 			if(hasPermission && !notPermissionFlag || !hasPermission && notPermissionFlag)
@@ -131,14 +131,14 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 				});
 			}
 		};
-	});	
+	});
 	app.directive('fileModel', ['$parse', function ($parse) {
 		return {
 			restrict: 'A',
 			link: function(scope, element, attrs) {
 				var model = $parse(attrs.fileModel);
 				var modelSetter = model.assign;
-				
+
 				element.bind('change', function(){
 					scope.$apply(function(){
 						modelSetter(scope, element[0].files[0]);
@@ -210,6 +210,12 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			  when('/Frontpage', angularAMD.route({
 				templateUrl: 'views/frontpage.html',
 				controller: 'FrontpageController'
+			  })).
+			  when('/Hardware/ZWave/:name/:idx', angularAMD.route({
+				templateUrl: 'views/hardware/zwave.html',
+				controller: 'ZWaveController',
+				controllerUrl: 'hardware/ZWave',
+				permission: 'Admin'
 			  })).
 			  when('/Hardware', angularAMD.route({
 				templateUrl: 'views/hardware.html',
@@ -328,11 +334,6 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 				controller: 'WeatherController',
 				controllerAs: 'ctrl'
 			  })).
-			  when('/ZWaveTopology', angularAMD.route({
-				templateUrl: 'zwavetopology.html',
-				controller: 'ZWaveTopologyController',
-				permission: 'Admin'
-			  })).
 			  when('/About', angularAMD.route({
 				templateUrl: 'views/about.html',
 				controller: 'AboutController'
@@ -350,7 +351,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			// Use html5 mode.
 			//$locationProvider.html5Mode(true);
 	});
-	
+
 	app.config(function($httpProvider) {
 		var logsOutUserOn401 = ['$q', '$location', 'permissions', function ($q, $location,permissions) {
 			return {
@@ -405,19 +406,19 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 		});
 	} ]);
 
-	
+
 	app.run(function($rootScope, $location, $window, $route, $http, permissions) {
 		var permissionList = {
 				isloggedin: false,
 				rights: -1
 		};
-		permissions.setPermissions(permissionList);					
+		permissions.setPermissions(permissionList);
 
 		$rootScope.MakeGlobalConfig = function()
 		{
 			//Ver bad (Old code!), should be changed soon!
 			$.FiveMinuteHistoryDays = $rootScope.config.FiveMinuteHistoryDays;
-			
+
 			$.myglobals.ismobileint=false;
 			if (typeof $rootScope.config.MobileType != 'undefined') {
 				if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
@@ -430,9 +431,9 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 					}
 				}
 			}
-			
+
 			$.myglobals.DashboardType=$rootScope.config.DashboardType;
-			
+
 			if (typeof $rootScope.config.WindScale != 'undefined') {
 				$.myglobals.windscale=parseFloat($rootScope.config.WindScale);
 			}
@@ -485,7 +486,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			//Get Config
 			$.ajax({
 			 url: "json.htm?type=command&param=getconfig",
-			 async: false, 
+			 async: false,
 			 dataType: 'json',
 			 success: function(data) {
 				isOnline = true;
@@ -511,9 +512,9 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 					$rootScope.config.EnableTabUtility=data.result.EnableTabUtility;
 					$rootScope.config.ShowUpdatedEffect=data.result.ShowUpdatedEffect;
 					$rootScope.config.DegreeDaysBaseTemperature=data.result.DegreeDaysBaseTemperature;
-				
+
 					SetLanguage(data.language);
-					
+
 					//Translate Highcharts (partly)
 					Highcharts.setOptions({
 						lang: {
@@ -556,7 +557,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 							]
 						}
 					});
-					
+
 					$rootScope.MakeGlobalConfig();
 
 					if (typeof data.result.templates!= 'undefined') {
@@ -580,12 +581,12 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			 }
 			});
 		}
-		
+
 		$rootScope.GetGlobalConfig();
 
 		$.ajax({
 		 url: "json.htm?type=command&param=getversion",
-		 async: false, 
+		 async: false,
 		 dataType: 'json',
 		 success: function(data) {
 			isOnline = true;
@@ -609,10 +610,10 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			isOnline=false;
 		 }
 		});
-		
+
 		$.ajax({
 		 url: "json.htm?type=command&param=getauth",
-		 async: false, 
+		 async: false,
 		 dataType: 'json',
 		 success: function(data) {
 			isOnline = true;
@@ -626,7 +627,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			isOnline=false;
 		 }
 		});
-	
+
 		$rootScope.$on("$routeChangeStart", function (scope, next, current) {
 			if (!isOnline) {
 				$location.path('/Offline');
@@ -645,7 +646,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 				//	$location.path('/Floorplans');
 				//	return;
 				//}
-				
+
 				if ( (!permissions.isAuthenticated()) && (next.templateUrl!="views/login.html") ) {
 					$location.path('/Login');
 					//$window.location = '/#Login';
@@ -656,7 +657,7 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 					$location.path('/Dashboard');
 					return;
 				}
-				
+
 				if (next && next.$$route && next.$$route.permission) {
 					var permission = next.$$route.permission;
 					if(!permissions.hasPermission(permission)) {
@@ -666,12 +667,12 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			}
         });
         permissions.setPermissions(permissionList);
-        
+
         $rootScope.SetTimeAndSun = function(sunRise, sunSet, ServerTime)
         {
 			var month=ServerTime.split(' ')[0];
 			ServerTime=ServerTime.replace(month,$.t(month));
-			
+
 			var suntext;
 			var bIsMobile=$.myglobals.ismobile;
 			if (bIsMobile == true) {
@@ -683,12 +684,12 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 			}
 			$("#timesun").html(suntext);
         }
-        
+
 		$rootScope.RefreshTimeAndSun = function(placeholder) {
 			if (typeof $("#timesun") != 'undefined') {
 				$http({
 				 url: "json.htm?type=command&param=getSunRiseSet",
-				 async: true, 
+				 async: true,
 				 dataType: 'json'
 				}).success(function(data) {
 					if (typeof data.Sunrise != 'undefined') {
@@ -701,4 +702,4 @@ define(['angularAMD', 'angular-route', 'angular-animate', 'ng-grid', 'ng-grid-fl
 
     // Bootstrap Angular when DOM is ready
     return angularAMD.bootstrap(app);
-}); 
+});

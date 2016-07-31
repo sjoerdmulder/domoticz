@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# ref 1272
+# ref 1273
 
 CACHE:
 # CSS
@@ -464,6 +464,7 @@ app/FloorplanEditController.js
 app/ForecastController.js
 app/FrontpageController.js
 app/HardwareController.js
+app/hardware/ZWave.js
 app/HistoryController.js
 app/LightsController.js
 app/LogController.js
@@ -485,7 +486,6 @@ app/UsersController.js
 app/UserVariablesController.js
 app/UtilityController.js
 app/WeatherController.js
-app/ZWaveTopologyController.js
 js/angular-animate.min.js
 js/angular-md5-min.js
 js/angular-round-progress-directive.js
@@ -493,6 +493,7 @@ js/angular-route.min.js
 js/angular-sanitize.min.js
 js/angular-scrollglue.js
 js/angular-tree-control.js
+js/angular-datatables.min.js
 js/angular.min.js
 js/angularAMD.min.js
 js/blockly_compressed.js

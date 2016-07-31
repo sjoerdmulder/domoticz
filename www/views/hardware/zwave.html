@@ -1,0 +1,222 @@
+<div class="modal hide fade" id="IncludeZWaveDialog" tabindex="-1" role="dialog" aria-labelledby="IncludeZWaveNodeDialog" aria-hidden="false">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="izwd_title">Including ZWave Node</h4>
+      </div>
+      <div class="modal-body">
+		<div>
+			<center>
+			<font color="black">
+			<div id="izwd_waiting" style="display:none;">
+				<span>Press the include button on your device...</span><br>
+				<br>
+				<div class="sk-fading-circle" style="width: 48px; height: 48px;">
+				  <div class="sk-circle1 sk-circle"></div>
+				  <div class="sk-circle2 sk-circle"></div>
+				  <div class="sk-circle3 sk-circle"></div>
+				  <div class="sk-circle4 sk-circle"></div>
+				  <div class="sk-circle5 sk-circle"></div>
+				  <div class="sk-circle6 sk-circle"></div>
+				  <div class="sk-circle7 sk-circle"></div>
+				  <div class="sk-circle8 sk-circle"></div>
+				  <div class="sk-circle9 sk-circle"></div>
+				  <div class="sk-circle10 sk-circle"></div>
+				  <div class="sk-circle11 sk-circle"></div>
+				  <div class="sk-circle12 sk-circle"></div>
+				</div>
+				<br>
+				<button type="button" ng-click="OnZWaveAbortInclude()" id="izwd_abort" class="btn btn-info">Abort</button><br>
+			</div>
+			<div id="izwd_result" style="display:none;">
+				Included node: <b>{{ozw_node_id}}</b><br>
+				<b>{{ozw_node_desc}}</b><br>
+				<br>
+				<button type="button" ng-click="OnZWaveCloseInclude()" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+			</font>
+			</center>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal hide fade" id="ExcludeZWaveDialog" tabindex="-1" role="dialog" aria-labelledby="ExcludeZWaveNodeDialog" aria-hidden="false">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="ezwd_title">Excluding ZWave Node</h4>
+      </div>
+      <div class="modal-body">
+		<div>
+			<center>
+			<font color="black">
+			<div id="ezwd_waiting" style="display:none;">
+				<span>Press the exclude button on your device...</span><br>
+				<br>
+				<div class="sk-fading-circle" style="width: 48px; height: 48px;">
+				  <div class="sk-circle1 sk-circle"></div>
+				  <div class="sk-circle2 sk-circle"></div>
+				  <div class="sk-circle3 sk-circle"></div>
+				  <div class="sk-circle4 sk-circle"></div>
+				  <div class="sk-circle5 sk-circle"></div>
+				  <div class="sk-circle6 sk-circle"></div>
+				  <div class="sk-circle7 sk-circle"></div>
+				  <div class="sk-circle8 sk-circle"></div>
+				  <div class="sk-circle9 sk-circle"></div>
+				  <div class="sk-circle10 sk-circle"></div>
+				  <div class="sk-circle11 sk-circle"></div>
+				  <div class="sk-circle12 sk-circle"></div>
+				</div>
+				<br>
+				<button type="button" ng-click="OnZWaveAbortExclude()" id="ezwd_abort" class="btn btn-info">Abort</button><br>
+			</div>
+			<div id="ezwd_result" style="display:none;">
+				Excluded node: <b>{{ozw_node_id}}</b><br>
+				<br>
+				<button type="button" ng-click="OnZWaveCloseExclude()" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+			</font>
+			</center>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- Start Backbutton -->
+<!-- TODO: Make this a directive -->
+<table class="bannav" id="bannav" border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	  	<td>
+		  	<a class="btnstylerev" href="#/Hardware" data-i18n="Back">Back</a>
+  		</td>
+	</tr>
+</table>
+<br>
+<!-- End Backbutton -->
+
+<p><center><h2><span data-i18n="Device">Device</span>: {{deviceName}}</h2></center></p>
+
+<div ng-if="!nodesQueried" class="alert alert-error"><b><span data-i18n="Not all Nodes have been Queried yet, OpenZWave not fully initialized yet!"></span></b></div>
+
+<div class="page-header-small">
+	<table id="updelclr" border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<td>
+				<h1 data-i18n="Nodes">Nodes</h1>
+			</td>
+			<td align="right">
+				<div class="dropdown">
+				  <button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu1" data-toggle="dropdown">
+					<span data-i18n="Node management">Node management</span>
+					<span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
+					<li><a><button type="button" data-i18n="Include Node" class="btn btn-primary" ng-click="ZWaveIncludeNode(false);">Include Node</button></a></li>
+					<li><a><button type="button" data-i18n="Include Node Secure" class="btn btn-primary" ng-click="ZWaveIncludeNode(true);">Include Node Secure</button></a></li>
+					<li><a><button type="button" data-i18n="Exclude Node" class="btn btn-primary" ng-click="ZWaveExcludeNode();">Exclude Node</button></a></li>
+					<li><a><button type="button" data-i18n="Heal network" class="btn btn-warning" ng-click="ZWaveHealNetwork();">Heal network</button></a></li>
+					<li role="presentation" class="divider"></li>
+					<li><a><button type="button" data-i18n="Groups & Network" class="btn btn-success" ng-click="ZWaveTopology();">Groups & Network</button></a></li>
+					<li role="presentation" class="divider"></li>
+					<li><a><button type="button" data-i18n="Soft reset controller" class="btn btn-danger" ng-click="ZWaveSoftResetNode();">Soft reset controller</button></a></li>
+					<li><a><button type="button" data-i18n="Hard reset controller" class="btn btn-danger" ng-click="ZWaveHardResetNode();">Hard reset controller</button></a></li>
+					<li><a><button type="button" data-i18n="Receive configuration from other controller" class="btn btn-primary" ng-click="ZWaveReceiveConfiguration();">Receive configuration from other controller</button></a></li>
+					<li><a><button type="button" data-i18n="Send configuration to other controller" class="btn btn-primary" ng-click="ZWaveSendConfiguration();">Send configuration to other controller</button></a></li>
+					<li><a><button type="button" data-i18n="Transfer primary role" class="btn btn-danger" ng-click="ZWaveTransferPrimaryRole();">Transfer primary role</button></a></li>
+					<li ng-show="current.HaveUserCodes" role="presentation" class="divider"></li>
+					<li ng-show="current.HaveUserCodes"><a><button type="button" data-i18n="Start User Code Enrollment" class="btn btn-primary" ng-click="ZWaveStartUserCodeEnrollment();">Start User Code Enrollment</button></a></li>
+					<li ng-show="current.HaveUserCodes"><a id="zwavecodemanagement"><button type="button" data-i18n="User Code Management" class="btn btn-primary" ng-click="ZWaveUserCodeManagement();">User Code Management</button></a></li>
+					<li role="presentation" class="divider"></li>
+					<li><a href="zwavegetconfig.php?idx={{idx}}">
+							<button type="button" data-i18n="Download Configuration File" class="btn btn-primary">Download Configuration File</button>
+					</a></li>
+					<li><a href="/ozwcp/cp.html">
+						<button type="button" data-i18n="Control Panel" class="btn btn-primary">Control Panel</button>
+					</a></li>
+				  </ul>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<table datatable dt-options="dtOptions" dt-instance="dtInstance" class="display" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <thead>
+    	<tr>
+            <th width="80" align="center" data-i18n="NodeID">NodeID</th>
+            <th width="150" align="left" data-i18n="Name">Name</th>
+            <th align="left" data-i18n="Description">Description</th>
+            <th width="120" align="center" data-i18n="Manufacturer">Manufacturer</th>
+            <th width="80" align="center" data-i18n="ID">ID</th>
+            <th width="80" align="center" data-i18n="Type">Type</th>
+            <th width="150" align="left" data-i18n="Last Seen">Last Seen</th>
+            <th width="50" align="left" data-i18n="EnablePolling">Enable Polling</th>
+            <th width="50" align="left" data-i18n="Status">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+<input type="hidden" id="idx" name="idx" value="{{idx}}">
+<table id="updelclr" border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td>
+			<a ng-class="{'btnstyle3-dis': !current, 'btnstyle3': current} " ng-click="updateNode(current)" data-i18n="Update">Update</a>&nbsp;&nbsp;&nbsp;
+			<a ng-class="{'btnstyle3-dis': !current || current.NodeID == ownNodeId, 'btnstyle3': current}" ng-click="deleteNode(current)" data-i18n="Delete">Delete</a>
+		</td>
+		<td align="right">
+			<a class="btnstyle3" data-i18n="Refresh" ng-click="RefreshOpenZWaveNodeTable();">Refresh</a>
+		</td>
+	</tr>
+</table>
+<br>
+
+<table class="display" id="nodeparamstable" border="0" cellpadding="0" cellspacing="20">
+	<tr>
+		<td align="right" style="width:110px"><label for="nodename"><span data-i18n="Name"></span>:</label></td>
+		<td><input type="text" ng-model="current.Name" id="nodename" style="width: 250px; padding: .2em;" class="text ui-widget-content ui-corner-all" /></td>
+	</tr>
+	<tr id="trEnablePolling" ng-hide="current.NodeID == ownNodeId">
+		<td align="right" style="width:80px"><label for="EnablePolling"><span data-i18n="EnablePolling"></span>:</label></td>
+		<td><input type="checkbox" ng-model="current.PollEnabled" id="EnablePolling"></td>
+	</tr>
+</table>
+<div ng-if="current.Config">
+	<br>
+	<h2 data-i18n="Configuration">Configuration</h2>
+	<br>
+	<a class="btnstyle3" id="noderequeststoredvalues" data-i18n="RequestConfiguration" ng-click="RequestZWaveConfiguration(current.NodeID);">Request current stored values from device</a><br /><br />
+	<div ng-repeat="item in current.Config">
+		<b>{{item.index}}. {{item.label}}:</b>
+		<span ng-switch on="item.type">
+			<select ng-switch-when="list" style="width:100%"
+				ng-model="item.value" class="combobox ui-corner-all" ng-options="o as o for o in item.listitem"></select>
+			<select ng-switch-when="boolean" style="width:100%"
+				ng-model="item.value" class="combobox ui-corner-all" ng-options="o as o for o in ['True', 'False']"></select>
+			<span ng-switch-when="string">
+				<input type="text" ng-model="item.value" style="width: 600px; padding: .2em;" class="text ui-widget-content ui-corner-all">
+				<span ng-if="item.units">({{item.units}})</span>
+				( <span data-i18n="actual"></span>: {{item.value}} )
+			</span>
+			<span ng-switch-default>
+				<input type="text" ng-model="item.value" style="width: 50px; padding: .2em;" class="text ui-widget-content ui-corner-all">
+				<span ng-if="item.units">({{item.units}})</span>
+				( <span data-i18n="actual"></span>: {{item.serverValue}} )
+			</span>
+		</span>
+		<br><br>{{item.help}}<br>
+		Last Update: {{item.LastUpdate}}
+		<br><br><br>
+	</div>
+
+	<a ng-if="current.Config.length" class="btnstyle3" id="nodeapplyconfiguration" data-i18n="ApplyConfiguration" ng-click="ApplyZWaveConfiguration(current);" >Apply configuration for this device</a><br />
+
+	</div>
+
+</div>
